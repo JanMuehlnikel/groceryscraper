@@ -7,7 +7,7 @@ TODAY = date.today()
 class StorePipeline(object):
 
     def __init__(self):
-        self.con = sqlite3.connect('Test.db')
+        self.con = sqlite3.connect('DB.db')
         self.cur = self.con.cursor()
 
     def crate_table(self, store):
