@@ -1,5 +1,6 @@
 import scrapy
 from groceryscraper.items import ProductItem
+from datetime import date
 
 
 class QuotesSpider(scrapy.Spider):
@@ -13,19 +14,18 @@ class QuotesSpider(scrapy.Spider):
 
         # Iterate through the categories
         for link in category_url_list:
-            category_name = link.strip('/de/produkte/produktsortiment/').strip('.html')
             url = self.store_identifier + link
             next_page = response.urljoin(url)
 
             yield scrapy.Request(
                 next_page,
                 callback=self.parse_categories,
-                meta={'url': next_page, 'name': category_name, 'page_number': 0}
+                meta={'url': next_page,'page_number': 0}
             )
 
     def parse_categories(self, response):
         category_url = response.meta.get("url")
-        category_name = response.meta.get("name")
+        category_name = response.xpath('//h1[@class="plp_title"]//text()').get().strip()
         page_number = response.meta.get("page_number")
 
         # Find out number of Products in this category
@@ -37,7 +37,8 @@ class QuotesSpider(scrapy.Spider):
                 product_page = response.urljoin(self.store_identifier + url)
 
                 yield scrapy.Request(product_page,
-                                     callback=self.parse_product
+                                     callback=self.parse_product,
+                                     meta={'name': category_name}
                                      )
 
             page_number += 1
@@ -54,25 +55,38 @@ class QuotesSpider(scrapy.Spider):
 
     def parse_product(self, response):
 
-        item = ProductItem()
+        category_name_str = response.meta.get("name")
 
-        name_str = response.xpath('//*[@id="pdpDetails"]/div[2]/div[3]/h1//text()').get()
+        name_str = response.xpath(
+            '//*[@id="pdpDetails"]/div[2]/div[3]/h1//text()').get().strip()
 
-        price_str = response.xpath('//*[@id="pdpDetails"]/div[2]/div[4]/div[1]/div/div[1]/span//text()').get()
+        price_str = response.xpath(
+            '//*[@id="pdpDetails"]/div[2]/div[4]/div[1]/div/div[1]/span//text()')\
+            .get().replace('€', '').replace(',', '.').strip()
 
         description_str = ''
         for i in range(1, 8):
 
             description = str(response.xpath(
                 f'//*[@id="content-panel-1"]/section/div[1]/div/ul/li[{i}]//text()')
-                                       .get())
+                                       .get()).strip()
 
             if description != 'None':
                 description_str += description
 
+        image = response.xpath(
+            '//a[@class="active zoom-ico-image"]/@href').get().strip()
+
+        date_str = date.today()
+
+        item = ProductItem()
         item['name'] = name_str
         item['price'] = price_str
         item['description'] = description_str
+        item['image'] = image
+        item['category'] = category_name_str
+        item['date'] = date_str
+        item['store'] = 'aldi'
 
         yield item
 

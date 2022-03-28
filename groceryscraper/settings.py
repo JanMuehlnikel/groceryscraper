@@ -17,8 +17,8 @@ NEWSPIDER_MODULE = 'groceryscraper.spiders'
 #USER_AGENT = 'groceryscraper (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
-PROXY_POOL_ENABLED = True
+ROBOTSTXT_OBEY = False
+#PROXY_POOL_ENABLED = True
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
@@ -49,12 +49,12 @@ PROXY_POOL_ENABLED = True
 #    'groceryscraper.middlewares.GroceryscraperSpiderMiddleware': 543,
 #}
 
-DOWNLOADER_MIDDLEWARES = {
-    # ...
-    'scrapy_proxy_pool.middlewares.ProxyPoolMiddleware': 610,
-    'scrapy_proxy_pool.middlewares.BanDetectionMiddleware': 620,
-    # ...
-}
+#DOWNLOADER_MIDDLEWARES = {
+#    # ...
+#    'scrapy_proxy_pool.middlewares.ProxyPoolMiddleware': 610,
+#    'scrapy_proxy_pool.middlewares.BanDetectionMiddleware': 620,
+#    # ...
+#}
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
@@ -70,9 +70,9 @@ DOWNLOADER_MIDDLEWARES = {
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'groceryscraper.pipelines.GroceryscraperPipeline': 300,
-#}
+ITEM_PIPELINES = {
+    'groceryscraper.pipelines.StorePipeline': 300
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
