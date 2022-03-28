@@ -3,7 +3,7 @@
 name: CRAWL
 on:
   schedule:
-    - cron: '* * * * *'
+    - cron: '* * * * * /echo scrapy crawl aldi'
 
 jobs:
   build:
