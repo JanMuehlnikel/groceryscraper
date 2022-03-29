@@ -1,6 +1,5 @@
 import sqlite3
 from datetime import date
-from groceryscraper import inflation_categories as cat
 
 TODAY = date.today()
 
