@@ -1,4 +1,4 @@
-itemloaders.processors
+itemloaders
 w3lib.html
 datetime
 sqlite3
