@@ -3,7 +3,7 @@
 name: CRAWL
 on:
   schedule:
-    - cron: '* * * * * /echo scrapy crawl aldi'
+    - cron: '* * * * *'
 
 jobs:
   build:
@@ -11,4 +11,4 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Aldi
-        run: echo scrapy crawl aldi
+        run: scrapy crawl aldi
