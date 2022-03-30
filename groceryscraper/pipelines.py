@@ -3,10 +3,11 @@ from datetime import date
 
 TODAY = date.today()
 
+
 class StorePipeline(object):
 
     def __init__(self):
-        self.con = sqlite3.connect('DB.db')
+        self.con = sqlite3.connect('Products.db')
         self.cur = self.con.cursor()
 
     def crate_table(self, store):
