@@ -57,7 +57,7 @@ class QuotesSpider(scrapy.Spider):
 
         price_str = response.xpath(
             '//*[@id="jm"]/main/div[1]/section/div/div[2]/div[2]/div/div/span//text()'
-        ).get().replace('FCFA', '').replace(',', '.').strip()
+        ).get().replace('FCFA', '').replace('.', '').strip()
 
         description_str = response.xpath(
             '//*[@id="jm"]/main/div[2]/div[2]/section[1]/div[2]/article[1]/div/div').get().strip()
