@@ -1,7 +1,13 @@
 import sqlite3
 from datetime import date
+from transformers import pipeline
 
 TODAY = date.today()
+
+#API
+finetuned_checkpoint = "peter2000/xlm-roberta-base-finetuned-ecoicop"
+classifier = pipeline("text-classification", model=finetuned_checkpoint)
+print('API LOAD')
 
 
 class StorePipeline(object):
@@ -16,7 +22,9 @@ class StorePipeline(object):
         category text,
         price text,
         image text,
-        date text
+        date text,
+        label,
+        score
         )""")
 
     def delete_row(self, store, name):
@@ -28,11 +36,17 @@ class StorePipeline(object):
         self.crate_table(store)
         self.delete_row(store, name)
 
-        self.cur.execute(f"""INSERT OR IGNORE INTO {store} VALUES(?,?,?,?,?)""",
+        cla = classifier(f'{item["category"]} <sep> {item["name"]} <sep> {item["url"]}')
+
+        self.cur.execute(f"""INSERT OR IGNORE INTO {store} VALUES(?,?,?,?,?,?,?)""",
                          (item['name'],
                           item['category'],
                           item['price'],
                           item['image'],
-                          item['date']))
+                          item['date'],
+                          cla[0].get('label'),
+                          cla[0].get('score')))
+
+
         self.con.commit()
         return item

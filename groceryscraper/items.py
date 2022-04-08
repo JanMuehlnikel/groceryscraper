@@ -19,5 +19,6 @@ class ProductItem(scrapy.Item):
     category = scrapy.Field(input_processor=MapCompose(remove_tags, strip), output_processor=TakeFirst())
     date = scrapy.Field(input_processor=MapCompose(remove_tags, strip), output_processor=TakeFirst())
     store = scrapy.Field(input_processor=MapCompose(remove_tags, strip), output_processor=TakeFirst())
+    url = scrapy.Field(input_processor=MapCompose(remove_tags, strip), output_processor=TakeFirst())
 
     pass

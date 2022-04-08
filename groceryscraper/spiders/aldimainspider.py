@@ -79,6 +79,8 @@ class QuotesSpider(scrapy.Spider):
 
         date_str = date.today()
 
+        url = str(response.request.url).replace(',', ' ').replace('/', ' ').replace('https://', '')
+
         item = ProductItem()
         item['name'] = name_str
         item['price'] = price_str
@@ -87,6 +89,7 @@ class QuotesSpider(scrapy.Spider):
         item['category'] = category_name_str
         item['date'] = date_str
         item['store'] = 'aldi'
+        item['url'] = url
 
         yield item
 
