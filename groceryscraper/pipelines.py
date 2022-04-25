@@ -38,15 +38,15 @@ class StorePipeline(object):
 
         cla = classifier(f'{item["category"]} <sep> {item["name"]} <sep> {item["url"]}')
 
-        self.cur.execute(f"""INSERT OR IGNORE INTO {store} VALUES(?,?,?,?,?,?,?)""",
-                         (item['name'],
-                          item['category'],
-                          item['price'],
-                          item['image'],
-                          item['date'],
-                          cla[0].get('label'),
-                          cla[0].get('score')))
+        if float(cla[0].get('score')) >= 0.7:
+            self.cur.execute(f"""INSERT OR IGNORE INTO {store} VALUES(?,?,?,?,?,?,?)""",
+                             (item['name'],
+                              item['category'],
+                              item['price'],
+                              item['image'],
+                              item['date'],
+                              cla[0].get('label'),
+                              cla[0].get('score')))
 
-
-        self.con.commit()
+            self.con.commit()
         return item
